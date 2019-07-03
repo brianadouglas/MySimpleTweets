@@ -7,9 +7,22 @@
     tools:context=".ComposeActivity">
 
     <EditText
-        android:id="@+id/et_simple"
+        android:id="@+id/tweetEdit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-    </EditText>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></EditText>
+
+    <Button
+        android:id="@+id/tweetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="161dp"
+        android:layout_marginEnd="162dp"
+        android:onClick="onSubmit"
+        android:text="Tweet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tweetEdit" />
 
 </android.support.constraint.ConstraintLayout>
