@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -11,6 +12,7 @@ public class Tweet {
     public long uid; // database id for the tweet
     public User user;
     public String createdAt;
+    public String image_url;
 
     public Tweet() {}
 
@@ -25,6 +27,13 @@ public class Tweet {
         tweet.uid = jsonObject.getLong("id");
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+
+        // get the entities within the tweet
+        JSONObject entities = jsonObject.getJSONObject("entities");
+        // get the media object from the entity
+        JSONArray media = entities.getJSONArray("media");
+        // get the expanded URL for the single image attached in the entities section
+        tweet.image_url = media.getJSONObject(0).getString("media_url_https");
         return tweet;
     }
 }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public TweetAdapter(List<Tweet> tweets) {
         mTweets = tweets;
     }
+    RelativeLayout relativeLayout;
 
     // for each row, inflate the layout and cache the references into ViewHolder
 
@@ -35,6 +37,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
+        relativeLayout = (RelativeLayout) tweetView.findViewById(R.id.singleTweet);
         ViewHolder viewHolder = new ViewHolder(tweetView);
         return viewHolder;
     }
@@ -52,6 +55,23 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         String [] arrStr = time.split(" ");
         holder.tvTime.setText(String.format(" · %s%s", arrStr[0], arrStr[1].charAt(0)));
         Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
+        if (tweet.image_url != null) {
+//            // add the image into an image view below the tweet body and to the right of the profile image
+//            ImageView imageView = new ImageView(context);
+//            Glide.with(context).load(tweet.image_url).into(imageView);
+//            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+//                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+//                    RelativeLayout.LayoutParams.WRAP_CONTENT
+//            );
+//            layoutParams.addRule(RelativeLayout.BELOW, R.id.tvBody);
+//            layoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.ivProfileImage);
+//            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            // add image into holder
+            Glide.with(context).load(tweet.image_url).into(holder.ivAttached);
+
+        } else {
+            holder.ivAttached.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -67,6 +87,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvUsername;
         public TextView tvBody;
         public TextView tvTime;
+        public ImageView ivAttached;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -77,6 +98,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvUsername = (TextView) itemView.findViewById(R.id.tvUserName);
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
+            ivAttached = (ImageView) itemView.findViewById(R.id.ivAttached);
         }
     }
 
@@ -95,6 +117,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         }
 
         return relativeDate;
+    }
+
+    // Clean all elements of the recycler
+    public void clear() {
+        mTweets.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Tweet> list) {
+        mTweets.addAll(list);
+        notifyDataSetChanged();
     }
 }
 

@@ -3,15 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ComposeActivity">
 
-    <EditText
-        android:id="@+id/tweetEdit"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></EditText>
+        app:counterEnabled="true"
+        app:counterMaxLength="280">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/tweetEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></android.support.design.widget.TextInputEditText>
+
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/tweetButton"
@@ -21,8 +30,10 @@
         android:layout_marginEnd="162dp"
         android:onClick="onSubmit"
         android:text="Tweet"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tweetEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 </android.support.constraint.ConstraintLayout>
