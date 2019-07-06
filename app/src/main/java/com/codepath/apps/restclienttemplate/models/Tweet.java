@@ -28,12 +28,14 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
 
-        // get the entities within the tweet
-        JSONObject entities = jsonObject.getJSONObject("entities");
-        // get the media object from the entity
-        JSONArray media = entities.getJSONArray("media");
-        // get the expanded URL for the single image attached in the entities section
-        tweet.image_url = media.getJSONObject(0).getString("media_url_https");
+        if(jsonObject.has("extended_entities")) {
+            // get the entities within the tweet
+            JSONObject entities = jsonObject.getJSONObject("entities");
+            // get the media object from the entity
+            JSONArray media = entities.getJSONArray("media");
+            // get the expanded URL for the single image attached in the entities section
+            tweet.image_url = media.getJSONObject(0).getString("media_url_https");
+        }
         return tweet;
     }
 }

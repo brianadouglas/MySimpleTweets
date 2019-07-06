@@ -85,10 +85,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 //            layoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.ivProfileImage);
 //            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             // add image into holder
+            holder.ivAttached.setVisibility(View.VISIBLE);
             Glide.with(context).load(tweet.image_url).bitmapTransform(new RoundedCornersTransformation(context, 25, 0)).into(holder.ivAttached);
 
         } else {
-            holder.ivAttached.setVisibility(View.INVISIBLE);
+            holder.ivAttached.setVisibility(View.GONE);
         }
     }
 
