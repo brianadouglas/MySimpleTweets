@@ -1,7 +1,11 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -12,12 +16,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+
+import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
     private List<Tweet> mTweets;
@@ -45,7 +54,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     // bind the values based on the position of the element
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         // get the data according to position
         Tweet tweet = mTweets.get(position);
         // populate the views according to this data
@@ -54,7 +63,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         String time = getRelativeTimeAgo(tweet.createdAt);
         String [] arrStr = time.split(" ");
         holder.tvTime.setText(String.format(" · %s%s", arrStr[0], arrStr[1].charAt(0)));
-        Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
+//        Glide.with(context).load(tweet.user.profileImageUrl).into(holder.ivProfileImage);
+        Glide.with(context).load(tweet.user.profileImageUrl).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.ivProfileImage) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                circularBitmapDrawable.setCircular(true);
+                holder.ivProfileImage.setImageDrawable(circularBitmapDrawable);
+            }
+        });
         if (tweet.image_url != null) {
 //            // add the image into an image view below the tweet body and to the right of the profile image
 //            ImageView imageView = new ImageView(context);
@@ -67,7 +85,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 //            layoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.ivProfileImage);
 //            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             // add image into holder
-            Glide.with(context).load(tweet.image_url).into(holder.ivAttached);
+            Glide.with(context).load(tweet.image_url).bitmapTransform(new RoundedCornersTransformation(context, 25, 0)).into(holder.ivAttached);
 
         } else {
             holder.ivAttached.setVisibility(View.INVISIBLE);
@@ -81,7 +99,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     // create ViewHolder class
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+                public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public ImageView ivProfileImage;
         public TextView tvUsername;
@@ -99,6 +117,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTime = (TextView) itemView.findViewById(R.id.tvTime);
             ivAttached = (ImageView) itemView.findViewById(R.id.ivAttached);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            // get the item position
+            int position = getAdapterPosition();
+            // make sure the position is valid - exists in the view
+            if (position != RecyclerView.NO_POSITION) {
+                Tweet tweet = mTweets.get(position);
+                Intent intent = new Intent(context, TweetDetailsActivity.class);
+                intent.putExtra(Tweet.class.getSimpleName(), Parcels.wrap(tweet));
+                context.startActivity(intent);
+            }
         }
     }
 
@@ -130,5 +162,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         mTweets.addAll(list);
         notifyDataSetChanged();
     }
+
 }
 

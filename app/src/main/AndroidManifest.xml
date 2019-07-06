@@ -10,15 +10,14 @@
     <application
         android:name=".TwitterApp"
         android:allowBackup="true"
-        android:logo="@drawable/ic_launcher_twitter"
-        android:label="Twitter"
-        android:icon="@drawable/ic_launcher_twitter"
         android:autoLink="all"
+        android:icon="@drawable/ic_launcher_twitter"
+        android:label="Twitter"
         android:linksClickable="true"
+        android:logo="@drawable/ic_launcher_twitter"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ComposeActivity">
-
-        </activity>
+        <activity android:name=".TweetDetailsActivity"></activity>
+        <activity android:name=".ComposeActivity"></activity>
         <activity android:name=".TimelineActivity" />
         <activity
             android:name=".LoginActivity"
